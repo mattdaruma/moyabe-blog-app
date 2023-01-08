@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { debounceTime, first } from 'rxjs';
-import { MoyabeBlogService, Settings } from 'src/app/moyabe-blog.service';
+import { debounceTime, first, map, Observable, startWith } from 'rxjs';
+import { Author, Authors, MoyabeBlogService, Settings } from 'src/app/moyabe-blog.service';
 
 @Component({
   selector: 'app-feed-settings',
@@ -15,7 +15,15 @@ export class FeedSettingsComponent {
       title: new FormControl(''),
       description: new FormControl(''),
       before: new FormControl<Date | null>(null),
-      after: new FormControl<Date | null>(null)
+      after: new FormControl<Date | null>(null),
+      authors: new FormGroup({
+        include: new FormControl(''),
+        exclude: new FormControl(''),
+      }),
+      tags: new FormGroup({
+        include: new FormControl(''),
+        exclude: new FormControl(''),
+      })
     }),
     sort: new FormGroup({
       date: new FormControl<number>(0),
@@ -27,12 +35,42 @@ export class FeedSettingsComponent {
       fields: new FormControl<string[]>([])
     })
   })
+  authors = {} as Authors
+  authorsArray = [] as Author[]
+  includedAuthors = [] as Author[]
+  filteredIncludedAuthors: Observable<Author[]>
+  excludedAuthors = [] as string[]
+  filteredExcludedAuthors = [] as string[]
+  includedTags = [] as string[]
+  filteredIncludedTags = [] as string[]
+  excludedTags = [] as string[]
+  filteredExcludedTags = [] as string[]
+  private autocompleteListSize = 10
   constructor(public mybs: MoyabeBlogService) {
+    this.filteredIncludedAuthors = this.settingsForm.get('filters.authors.include')!.valueChanges.pipe(
+      startWith(null),
+      map((authorSearch: string | null) => (
+        authorSearch 
+        ? this.authorsArray.filter(author => 
+          author.displayName.toLowerCase().startsWith(authorSearch)).slice(0, this.autocompleteListSize
+          ) 
+        : this.authorsArray.slice(0, this.autocompleteListSize))),
+    )
     this.mybs.Settings.subscribe(settings => {
       this._settings.expandDisplay = settings.expandDisplay
       this._settings.expandFilters = settings.expandFilters
       this._settings.expandSettings = settings.expandSettings
       this._settings.expandSort = settings.expandSort
+    })
+    this.mybs.Authors.subscribe(authors => {
+      this.authors = authors
+      let authorsArray = []
+      for(let authorId in authors){
+        authors[authorId].authorId = authorId
+        authorsArray.push(authors[authorId])
+      }
+      this.authorsArray = authorsArray
+      this.settingsForm.get('filters.authors.include')?.setValue(null)
     })
     this.mybs.Settings.pipe(
       first()
@@ -105,6 +143,15 @@ export class FeedSettingsComponent {
     if (settingName === 'settings') this._settings.expandSettings = false
     if (settingName === 'sort') this._settings.expandSort = false
     this.mybs.Settings.next(this._settings)
+  }
+  addIncludedAuthor(author: Author){
+    if(this.includedAuthors.some(included => included.authorId === author.authorId)) return
+    this.settingsForm.get('filters.authors.include')?.setValue('')
+    this.includedAuthors.push(author)
+  }
+  removeIncludedAuthor(author: Author){
+    if(!this.includedAuthors.some(included => included.authorId === author.authorId)) return
+    this.includedAuthors.splice(this.includedAuthors.findIndex(included => included.authorId === author.authorId), 1)
   }
   clearFilters() {
     if(

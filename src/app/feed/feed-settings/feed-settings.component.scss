@@ -5,6 +5,9 @@
     flex-wrap: wrap;
     gap: 1em;
 }
+.equal-flex > *{
+    flex-grow: 1
+}
 .right-align{
     display: flex;
     justify-content: flex-end;

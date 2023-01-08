@@ -19,6 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { MatButtonModule } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { MarkdownModule } from 'ngx-markdown';
@@ -48,6 +49,7 @@ import { FeedCardsComponent } from './feed/feed-cards/feed-cards.component';
     MatChipsModule,
     MatButtonModule,
     MatDatepickerModule,
+    MatAutocompleteModule,
     MatNativeDateModule,
     MatPaginatorModule,
     MatTabsModule,
