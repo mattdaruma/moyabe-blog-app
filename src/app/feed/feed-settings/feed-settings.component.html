@@ -141,8 +141,11 @@
                 </mat-expansion-panel>
             </mat-accordion>
             <div class="right-align top-pad">
-                <button mat-raised-button color="accent"><mat-icon>settings_backup_restore</mat-icon>Restore
-                    Defaults</button>
+                <button 
+                (click)="setForm(mybs.WebSettings)"
+                mat-raised-button color="accent">
+                <mat-icon>settings_backup_restore</mat-icon>
+                Restore Defaults</button>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

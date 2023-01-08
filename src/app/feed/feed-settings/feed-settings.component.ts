@@ -31,14 +31,8 @@ export class FeedSettingsComponent {
     this.mybs.Settings.pipe(
       first()
     ).subscribe(newSettings => {
+      this.setForm(newSettings)
       this._settings = Object.assign(this._settings, newSettings) as Settings
-      this.settingsForm.get('filters.title')?.setValue(newSettings.filterTitle)
-      this.settingsForm.get('filters.description')?.setValue(newSettings.filterDescription)
-      this.settingsForm.get('display.feed')?.setValue(newSettings.displayFeed)
-      this.settingsForm.get('display.fields')?.setValue(newSettings.displayFields)
-      this.settingsForm.get('sort.date')?.setValue(newSettings.sortDate)
-      this.settingsForm.get('sort.title')?.setValue(newSettings.sortTitle)
-      this.settingsForm.get('sort.author')?.setValue(newSettings.sortAuthor)
       this.settingsForm.get('display')?.valueChanges
       .pipe(debounceTime(100))
       .subscribe(newDisplay => {
@@ -75,6 +69,15 @@ export class FeedSettingsComponent {
         this.mybs.UpdateList.next(true)
       })
     })
+  }
+  setForm(settigns: Settings){
+    this.settingsForm.get('filters.title')?.setValue(settigns.filterTitle)
+    this.settingsForm.get('filters.description')?.setValue(settigns.filterDescription)
+    this.settingsForm.get('display.feed')?.setValue(settigns.displayFeed)
+    this.settingsForm.get('display.fields')?.setValue(settigns.displayFields)
+    this.settingsForm.get('sort.date')?.setValue(settigns.sortDate)
+    this.settingsForm.get('sort.title')?.setValue(settigns.sortTitle)
+    this.settingsForm.get('sort.author')?.setValue(settigns.sortAuthor)
   }
   panelExpanded(settingName: string) {
     if (settingName === 'display') this._settings.expandDisplay = true

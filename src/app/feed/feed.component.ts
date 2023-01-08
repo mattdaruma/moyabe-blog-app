@@ -12,7 +12,7 @@ export class FeedComponent {
   posts: Post[] = []
   filteredPosts: Post[] = []
   pagedPosts: Post[] = []
-  pageSize: number = 5
+  pageSize: number = 10
   pageIndex: number = 0
   authors: Authors = {}
   constructor(public mybs: MoyabeBlogService) { 
@@ -75,12 +75,6 @@ export class FeedComponent {
           }
         }
       }
-      for(let topic of settings.sortOrder){
-      }
-      // filteredPosts.sort((a, b)=>{
-      //   if(b.title == 'My Second Post') return 1
-      //   else return -1
-      // })
       this.pageIndex = 0
       this.filteredPosts = filteredPosts
       this.applyPaging()
