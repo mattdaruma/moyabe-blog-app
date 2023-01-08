@@ -28,6 +28,12 @@ export class FeedSettingsComponent {
     })
   })
   constructor(public mybs: MoyabeBlogService) {
+    this.mybs.Settings.subscribe(settings => {
+      this._settings.expandDisplay = settings.expandDisplay
+      this._settings.expandFilters = settings.expandFilters
+      this._settings.expandSettings = settings.expandSettings
+      this._settings.expandSort = settings.expandSort
+    })
     this.mybs.Settings.pipe(
       first()
     ).subscribe(newSettings => {
@@ -70,14 +76,21 @@ export class FeedSettingsComponent {
       })
     })
   }
-  setForm(settigns: Settings){
-    this.settingsForm.get('filters.title')?.setValue(settigns.filterTitle)
-    this.settingsForm.get('filters.description')?.setValue(settigns.filterDescription)
-    this.settingsForm.get('display.feed')?.setValue(settigns.displayFeed)
-    this.settingsForm.get('display.fields')?.setValue(settigns.displayFields)
-    this.settingsForm.get('sort.date')?.setValue(settigns.sortDate)
-    this.settingsForm.get('sort.title')?.setValue(settigns.sortTitle)
-    this.settingsForm.get('sort.author')?.setValue(settigns.sortAuthor)
+  setForm(settings: Settings){
+    this.settingsForm.get('filters.title')?.setValue(settings.filterTitle)
+    this.settingsForm.get('filters.description')?.setValue(settings.filterDescription)
+    this.settingsForm.get('display.feed')?.setValue(settings.displayFeed)
+    this.settingsForm.get('display.fields')?.setValue(settings.displayFields)
+    this.settingsForm.get('sort.date')?.setValue(settings.sortDate)
+    this.settingsForm.get('sort.title')?.setValue(settings.sortTitle)
+    this.settingsForm.get('sort.author')?.setValue(settings.sortAuthor)
+  }
+  restoreDefaults(){
+    this._settings.expandDisplay = this.mybs.WebSettings.expandDisplay
+    this._settings.expandFilters = this.mybs.WebSettings.expandFilters
+    this._settings.expandSettings = this.mybs.WebSettings.expandSettings
+    this._settings.expandSort = this.mybs.WebSettings.expandSort
+    this.setForm(this.mybs.WebSettings)
   }
   panelExpanded(settingName: string) {
     if (settingName === 'display') this._settings.expandDisplay = true

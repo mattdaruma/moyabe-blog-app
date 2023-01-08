@@ -1,12 +1,12 @@
-<div *ngIf="(mybs.Settings | async) as settings">
+<div>
     <mat-accordion [formGroup]="settingsForm">
-        <mat-expansion-panel [expanded]="settings.expandSettings" (afterCollapse)="panelCollapsed('settings')" (afterExpand)="panelExpanded('settings')">
+        <mat-expansion-panel [expanded]="_settings.expandSettings" (afterCollapse)="panelCollapsed('settings')" (afterExpand)="panelExpanded('settings')">
             <mat-expansion-panel-header>
                 <mat-panel-title><mat-icon color="primary">settings</mat-icon>Feed Settings</mat-panel-title>
                 <mat-panel-description>Configure, filter, and sort the blog feed.</mat-panel-description>
             </mat-expansion-panel-header>
             <mat-accordion multi>
-                <mat-expansion-panel  [expanded]="settings.expandFilters" (afterCollapse)="panelCollapsed('filters')" (afterExpand)="panelExpanded('filters')" formGroupName="filters">
+                <mat-expansion-panel  [expanded]="_settings.expandFilters" (afterCollapse)="panelCollapsed('filters')" (afterExpand)="panelExpanded('filters')" formGroupName="filters">
                     <mat-expansion-panel-header>
                         <mat-panel-title><mat-icon color="primary">filter_alt</mat-icon>Filter</mat-panel-title>
                         <mat-panel-description>Search for specific posts.</mat-panel-description>
@@ -74,7 +74,7 @@
                     </div>
                 </mat-expansion-panel>
                 <mat-expansion-panel  
-                [expanded]="settings.expandSort" 
+                [expanded]="_settings.expandSort" 
                 (afterCollapse)="panelCollapsed('sort')" 
                 (afterExpand)="panelExpanded('sort')" 
                 formGroupName="sort">
@@ -110,7 +110,7 @@
                     </div>
                 </mat-expansion-panel>
     
-                <mat-expansion-panel formGroupName="display"  [expanded]="settings.expandDisplay" (afterCollapse)="panelCollapsed('display')" (afterExpand)="panelExpanded('display')">
+                <mat-expansion-panel formGroupName="display"  [expanded]="_settings.expandDisplay" (afterCollapse)="panelCollapsed('display')" (afterExpand)="panelExpanded('display')">
                     <mat-expansion-panel-header>
                         <mat-panel-title><mat-icon color="primary">display_settings</mat-icon>Display</mat-panel-title>
                         <mat-panel-description>Change the way the feed is displayed.</mat-panel-description>
@@ -142,7 +142,7 @@
             </mat-accordion>
             <div class="right-align top-pad">
                 <button 
-                (click)="setForm(mybs.WebSettings)"
+                (click)="restoreDefaults()"
                 mat-raised-button color="accent">
                 <mat-icon>settings_backup_restore</mat-icon>
                 Restore Defaults</button>
