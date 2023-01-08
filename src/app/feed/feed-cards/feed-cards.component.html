@@ -1,0 +1,48 @@
+<div class="card-feed" *ngIf="(mybs.Settings | async) as settings else noSettings">
+    <mat-card *ngFor="let post of posts">
+        <mat-card-header>
+            <div 
+                *ngIf="settings.displayFields.includes('author')" mat-card-avatar 
+                [style]="{background: 'url(\'assets/authors/'+post.author+'/avatar.png\'', backgroundSize: 'cover'}"
+                ></div>
+            <mat-card-subtitle *ngIf="settings.displayFields.includes('postId')">
+                {{post.postId}}
+            </mat-card-subtitle>
+            <mat-card-title 
+            [routerLink]="['post', post.postId]" 
+            class="pointer" 
+            *ngIf="settings.displayFields.includes('title')"
+            >
+                {{post.title}}
+            </mat-card-title>
+            <mat-card-subtitle *ngIf="settings.displayFields.includes('author')">
+                By {{authors[post.author].displayName}}
+            </mat-card-subtitle>
+            <mat-card-subtitle *ngIf="settings.displayFields.includes('addedDate')">
+                {{post.addedDate | date}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <img 
+            *ngIf="settings.displayFields.includes('cover')"
+            [routerLink]="['post', post.postId]" 
+            class="pointer" 
+            mat-card-image 
+            src="assets/posts/{{post.postId}}/{{post.cover}}"
+            alt="Post Cover Photo">
+        <mat-card-content *ngIf="settings.displayFields.includes('description')">
+            {{post.description}}
+        </mat-card-content>
+        <mat-card-actions *ngIf="settings.displayFields.includes('tags')">
+            <mat-chip-listbox>
+                <mat-chip *ngFor="let tag of post.tags">
+                  {{tag}}
+                </mat-chip>
+            </mat-chip-listbox>
+        </mat-card-actions>
+        <mat-card-actions *ngIf="settings.displayFields.includes('link')">
+            <button mat-button color="primary"
+            [routerLink]="['post', post.postId]"><mat-icon>local_library</mat-icon>Read Post</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<ng-template #noSettings>Loading settings...</ng-template>

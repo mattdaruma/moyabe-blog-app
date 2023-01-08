@@ -1,0 +1,20 @@
+mat-card{
+    margin-bottom: 1em;
+    max-width: 25em;
+}
+img{
+    max-width: 25em;
+    max-height: 25em;
+}
+.card-feed{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding-top: 1em;
+}
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }

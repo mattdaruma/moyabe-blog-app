@@ -1,0 +1,149 @@
+<div *ngIf="(mybs.Settings | async) as settings">
+    <mat-accordion [formGroup]="settingsForm">
+        <mat-expansion-panel [expanded]="settings.expandSettings" (afterCollapse)="panelCollapsed('settings')" (afterExpand)="panelExpanded('settings')">
+            <mat-expansion-panel-header>
+                <mat-panel-title><mat-icon color="primary">settings</mat-icon>Feed Settings</mat-panel-title>
+                <mat-panel-description>Configure, filter, and sort the blog feed.</mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-accordion multi>
+                <mat-expansion-panel  [expanded]="settings.expandFilters" (afterCollapse)="panelCollapsed('filters')" (afterExpand)="panelExpanded('filters')" formGroupName="filters">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><mat-icon color="primary">filter_alt</mat-icon>Filter</mat-panel-title>
+                        <mat-panel-description>Search for specific posts.</mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div>
+                        <div class="settings-row">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Title</mat-label>
+                                <input matInput placeholder="Title" formControlName="title">
+                                <mat-hint>Title contains this text.</mat-hint>
+                                <button color="primary" matSuffix mat-icon-button><mat-icon>filter_alt</mat-icon></button>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Description</mat-label>
+                                <input matInput placeholder="Description" formControlName="description">
+                                <mat-hint>Description contains this text.</mat-hint>
+                                <button color="primary" matSuffix mat-icon-button><mat-icon>filter_alt</mat-icon></button>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>After</mat-label>
+                                <input matInput [matDatepicker]="afterDate" formControlName="after">
+                                <mat-hint>Posted after this date.</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="afterDate"></mat-datepicker-toggle>
+                                <mat-datepicker #afterDate>
+                                    <mat-datepicker-actions>
+                                        <button mat-button matDatepickerCancel>Cancel</button>
+                                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                                    </mat-datepicker-actions>
+                                </mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Before</mat-label>
+                                <input matInput [matDatepicker]="beforeDate" formControlName="before">
+                                <mat-hint>Posted before this date.</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="beforeDate"></mat-datepicker-toggle>
+                                <mat-datepicker #beforeDate>
+                                    <mat-datepicker-actions>
+                                        <button mat-button matDatepickerCancel>Cancel</button>
+                                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                                    </mat-datepicker-actions>
+                                </mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="settings-row top-pad">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Author</mat-label>
+                                <input matInput placeholder="Author">
+                                <mat-hint>Add or exclude authors.</mat-hint>
+                                <button color="primary" matSuffix mat-icon-button><mat-icon>add</mat-icon></button>
+                                <button color="warn" matSuffix mat-icon-button><mat-icon>block</mat-icon></button>
+                            </mat-form-field>
+                        </div>
+                        <div class="settings-row top-pad">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Tags</mat-label>
+                                <input matInput placeholder="Tags">
+                                <mat-hint>Add or exclude tags.</mat-hint>
+                                <button color="primary" matSuffix mat-icon-button><mat-icon>add</mat-icon></button>
+                                <button color="warn" matSuffix mat-icon-button><mat-icon>block</mat-icon></button>
+                            </mat-form-field>
+                        </div>
+                        <div class="right-align padded-top">
+                            <button mat-raised-button color="warn" (click)="clearFilters()"><mat-icon>clear</mat-icon>Clear Filters</button>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel  
+                [expanded]="settings.expandSort" 
+                (afterCollapse)="panelCollapsed('sort')" 
+                (afterExpand)="panelExpanded('sort')" 
+                formGroupName="sort">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><mat-icon color="primary">sort</mat-icon>Sort</mat-panel-title>
+                        <mat-panel-description>Change the feed order.</mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="settings-row">
+                        <span>
+                            <mat-label>Date Sort </mat-label>
+                            <mat-button-toggle-group color="primary" formControlName="date">
+                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </span>
+                        <span>
+                            <mat-label>Title Sort </mat-label>
+                            <mat-button-toggle-group color="primary" formControlName="title">
+                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </span>
+                        <span>
+                            <mat-label>Author Sort </mat-label>
+                            <mat-button-toggle-group color="primary" formControlName="author">
+                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </span>
+                    </div>
+                </mat-expansion-panel>
+    
+                <mat-expansion-panel formGroupName="display"  [expanded]="settings.expandDisplay" (afterCollapse)="panelCollapsed('display')" (afterExpand)="panelExpanded('display')">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title><mat-icon color="primary">display_settings</mat-icon>Display</mat-panel-title>
+                        <mat-panel-description>Change the way the feed is displayed.</mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="settings-row">
+                        <span>
+                            <mat-label>Feed View </mat-label>
+                            <mat-button-toggle-group color="primary" #feedview="matButtonToggleGroup" formControlName="feed">
+                                <mat-button-toggle color="primary"
+                                    value="grid"><mat-icon>grid_view</mat-icon></mat-button-toggle>
+                                <mat-button-toggle value="list"><mat-icon>view_list</mat-icon></mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </span>
+                        <span>
+                            <mat-label>Fields Displayed </mat-label>
+                            <mat-button-toggle-group color="primary" multiple formControlName="fields">
+                                <mat-button-toggle value="postId">ID</mat-button-toggle>
+                                <mat-button-toggle value="title">Title</mat-button-toggle>
+                                <mat-button-toggle value="cover">Cover</mat-button-toggle>
+                                <mat-button-toggle value="addedDate">Date</mat-button-toggle>
+                                <mat-button-toggle value="description">Description</mat-button-toggle>
+                                <mat-button-toggle value="author">Author</mat-button-toggle>
+                                <mat-button-toggle value="tags">Tags</mat-button-toggle>
+                                <mat-button-toggle value="link">Link</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </span>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <div class="right-align top-pad">
+                <button mat-raised-button color="accent"><mat-icon>settings_backup_restore</mat-icon>Restore
+                    Defaults</button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

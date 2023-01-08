@@ -1,0 +1,15 @@
+
+.settings-row{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+.right-align{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1em;
+}
+.top-pad{
+    padding-top:1em;
+}

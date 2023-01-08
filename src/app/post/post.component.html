@@ -1,0 +1,6 @@
+<h1 style="text-align: center;">{{postData?.title}}</h1>
+<p style="text-align: center;">{{postData?.description}}</p>
+<div style="display:flex; justify-content: space-around;">
+    <button *ngFor="let tag of postData?.tags" mat-button color="accent">{{tag}}</button>
+</div>
+<div markdown [data]="postContent ?? ''"></div>

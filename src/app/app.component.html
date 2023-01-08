@@ -1,0 +1,7 @@
+<mat-toolbar color="primary">
+    <span class="center-flex">
+        <button color="accent" mat-icon-button [routerLink]="['/']"><mat-icon>home</mat-icon></button>
+        <span>{{(mybs.Settings | async)?.title}}</span>
+    </span> 
+</mat-toolbar>
+<router-outlet></router-outlet>

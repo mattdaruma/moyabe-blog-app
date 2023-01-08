@@ -1,0 +1,24 @@
+<div class="padded">
+    <app-feed-settings></app-feed-settings>
+    <div *ngIf="(mybs.Settings | async) as settings">
+        <app-feed-table 
+            [hidden]="settings.displayFeed !== 'list' || settings.displayFields.length === 0" 
+            [posts]="pagedPosts"
+            [authors]="authors"
+            ></app-feed-table>
+        <app-feed-cards 
+            [hidden]="settings.displayFeed !== 'grid' || settings.displayFields.length === 0" 
+            [posts]="pagedPosts"
+            [authors]="authors"
+            ></app-feed-cards>
+        <mat-paginator 
+            *ngIf="settings.displayFields.length > 0; else noSettings"
+            [pageIndex]="pageIndex" 
+            [pageSize]="pageSize" 
+            [length]="filteredPosts.length"
+            (page)="pageChange($event)"
+        ></mat-paginator>
+        <ng-template #noSettings>No fields selected.</ng-template>
+    </div>
+    <ng-template #noSettings>Loading settings...</ng-template>
+</div>

@@ -1,0 +1,22 @@
+{
+  "title": "MoYaBe Blog",
+  "description": "A XAX SEO friendly description of the blog.  This should show up with link previews.",
+  "displayFeed": "grid",
+  "displayFields": ["cover","title","addedDate","author","tags","link"],
+  "expandSettings": false,
+  "expandFilters": false,
+  "expandSort": false,
+  "expandDisplay": true,
+  "filterTitle": null,
+  "filterDescription": null,
+  "filterAfter": null,
+  "filterBefore": null,
+  "filterAuthorsInclude": [],
+  "filterAuthorsExclude": [],
+  "filterTagsInclude": [],
+  "filterTagsExclude": [],
+  "sortDate": -1,
+  "sortTitle": 0,
+  "sortAuthor": 0,
+  "sortOrder": ["Date", "Title", "Author"]
+}

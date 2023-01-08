@@ -1,0 +1,32 @@
+{
+    "966b4046-3330-4be6-9acb-22d0689a52a6": {
+        "title": "My First Post",
+        "description": "The first attempt at dynamic blog post.",
+        "tags": ["testing", "meta"],
+        "author": "d5dbbe26-b75d-4468-9dd4-dd2e5344c158",
+        "addedDate": 1672630690000,
+        "cover": "cloud.jpg",
+        "images": {
+            "cloud.jpg": {
+                "title": "Clouds by Billy Huynh",
+                "description": "https://unsplash.com/photos/v9bnfMCyKbg",
+                "addedDate": 1672630692544
+            }
+        }
+    },
+    "966b4046-3330-4be6-9acb-22d0689a52a7": {
+        "title": "My Second Post",
+        "description": "The second attempt at dynamic blog post.",
+        "tags": ["testing", "meta"],
+        "author": "d5dbbe26-b75d-4468-9dd4-dd2e5344c158",
+        "addedDate": 1672630692544,
+        "cover": "cloud.jpg",
+        "images": {
+            "cloud.jpg": {
+                "title": "Clouds by Billy Huynh",
+                "description": "https://unsplash.com/photos/v9bnfMCyKbg",
+                "addedDate": 1672630692544
+            }
+        }
+    }
+}
