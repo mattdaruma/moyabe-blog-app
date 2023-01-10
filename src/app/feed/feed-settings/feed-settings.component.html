@@ -29,29 +29,29 @@
                 </mat-button-toggle-group>
             </span>
         </div>
-        <div class="settings-row" formGroupName="sort" *ngIf="settings?.displaySortOptions === true">
+        <div class="settings-row" *ngIf="settings?.displaySortOptions === true">
             <span>
                 <mat-label>Date Sort </mat-label>
-                <mat-button-toggle-group color="primary" formControlName="date">
-                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                <mat-button-toggle-group [value]="settings?.sortDate" color="primary"> 
+                    <mat-button-toggle (click)="selectSort('date', 1)" [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('date', -1)" [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('date', 0)" [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
                 </mat-button-toggle-group>
             </span>
             <span>
                 <mat-label>Title Sort </mat-label>
-                <mat-button-toggle-group color="primary" formControlName="title">
-                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                <mat-button-toggle-group [value]="settings?.sortTitle" color="primary" >
+                    <mat-button-toggle (click)="selectSort('title', 1)" [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('title', -1)" [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('title', 0)" [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
                 </mat-button-toggle-group>
             </span>
             <span>
                 <mat-label>Author Sort </mat-label>
-                <mat-button-toggle-group color="primary" formControlName="author">
-                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                <mat-button-toggle-group [value]="settings?.sortAuthor" color="primary" >
+                    <mat-button-toggle (click)="selectSort('author', 1)" [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('author', -1)" [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle (click)="selectSort('author', 0)" [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
                 </mat-button-toggle-group>
             </span>
         </div>
@@ -96,13 +96,13 @@
                     </mat-datepicker>
                 </mat-form-field>
             </div>
-            <div class="settings-row equal-flex" formGroupName="authors" *ngIf="settings?.displayAuthorOptions === true">
+            <div class="settings-row equal-flex" *ngIf="settings?.displayAuthorOptions === true">
                 <mat-form-field appearance="outline">
                     <mat-label>Authors Included</mat-label>
                     <mat-chip-grid #authorsIncludesGrid>
-                        <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
-                            (removed)="removeIncludedAuthor(author)">
-                            {{author.displayName}}
+                        <mat-chip-row color="warn" *ngFor="let authorId of settings?.filterAuthorsInclude; let i = index"
+                            (removed)="removeIncludedAuthor(authors![authorId])">
+                            {{authors ? authors![authorId].displayName : ''}}
                             <button matChipRemove>
                                 <mat-icon>cancel</mat-icon>
                             </button>
@@ -110,7 +110,7 @@
                     </mat-chip-grid>
                     <mat-icon color="primary" matPrefix>add_task</mat-icon>
                     <input [matChipInputFor]="authorsIncludesGrid" [matAutocomplete]="authorsAuto"
-                        formControlName="include" />
+                        [formControl]="includedAuthorsControl" />
                     <mat-autocomplete #authorsAuto="matAutocomplete"
                         (optionSelected)="addIncludedAuthor($event.option.value)">
                         <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
@@ -121,68 +121,68 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Authors Excluded</mat-label>
-                    <mat-chip-grid #authorsIncludesGridZ>
-                        <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
-                            (removed)="removeIncludedAuthor(author)">
-                            {{author.displayName}}
+                    <mat-chip-grid #authorsExcludeGrid>
+                        <mat-chip-row *ngFor="let authorId of settings?.filterAuthorsExclude; let i = index"
+                            (removed)="removeExcludedAuthor(authors![authorId])">
+                            {{authors ? authors![authorId].displayName : ''}}
                             <button matChipRemove>
                                 <mat-icon>cancel</mat-icon>
                             </button>
                         </mat-chip-row>
                     </mat-chip-grid>
                     <mat-icon color="warn" matPrefix>block</mat-icon>
-                    <input [matChipInputFor]="authorsIncludesGridZ" [matAutocomplete]="authorsAutoZ"
-                        formControlName="exclude" />
-                    <mat-autocomplete #authorsAutoZ="matAutocomplete"
-                        (optionSelected)="addIncludedAuthor($event.option.value)">
-                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
+                    <input [matChipInputFor]="authorsExcludeGrid" [matAutocomplete]="authorsExcludedOptions"
+                    [formControl]="excludedAuthorsControl" />
+                    <mat-autocomplete #authorsExcludedOptions="matAutocomplete"
+                        (optionSelected)="addExcludedAuthor($event.option.value)">
+                        <mat-option *ngFor="let author of (filteredExcludedAuthors | async)" [value]="author">
                             {{author.displayName}}
                         </mat-option>
                     </mat-autocomplete>
                     <mat-hint>None of these authors.</mat-hint>
                 </mat-form-field>
             </div>
-            <div class="settings-row equal-flex" formGroupName="tags" *ngIf="settings?.displayTagOptions === true">
+            <div class="settings-row equal-flex" *ngIf="settings?.displayTagOptions === true">
                 <mat-form-field appearance="outline">
                     <mat-label>Tags Included</mat-label>
-                    <mat-chip-grid #authorsIncludesGridA>
-                        <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
-                            (removed)="removeIncludedAuthor(author)">
-                            {{author.displayName}}
+                    <mat-chip-grid #tagsIncludeGrid>
+                        <mat-chip-row color="warn" *ngFor="let tag of settings?.filterTagsInclude; let i = index"
+                            (removed)="removeIncludedTag(tag)">
+                            {{tag}}
                             <button matChipRemove>
                                 <mat-icon>cancel</mat-icon>
                             </button>
                         </mat-chip-row>
                     </mat-chip-grid>
                     <mat-icon color="primary" matPrefix>add_task</mat-icon>
-                    <input [matChipInputFor]="authorsIncludesGridA" [matAutocomplete]="authorsAutoA"
-                        formControlName="include" />
-                    <mat-autocomplete #authorsAutoA="matAutocomplete"
-                        (optionSelected)="addIncludedAuthor($event.option.value)">
-                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
-                            {{author.displayName}}
+                    <input [matChipInputFor]="tagsIncludeGrid" [matAutocomplete]="tagsIncludedOptions"
+                        [formControl]="includedTagsControl" />
+                    <mat-autocomplete #tagsIncludedOptions="matAutocomplete"
+                        (optionSelected)="addIncludedTag($event.option.value)">
+                        <mat-option *ngFor="let tag of (filteredIncludedTags | async)" [value]="tag">
+                            {{tag}}
                         </mat-option>
                     </mat-autocomplete>
                     <mat-hint>All of these tags.</mat-hint>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Tags Excluded</mat-label>
-                    <mat-chip-grid #authorsIncludesGridB>
-                        <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
-                            (removed)="removeIncludedAuthor(author)">
-                            {{author.displayName}}
+                    <mat-chip-grid #tagsExcludeGrid>
+                        <mat-chip-row *ngFor="let tag of settings?.filterTagsExclude; let i = index"
+                            (removed)="removeExcludedTag(tag)">
+                            {{tag}}
                             <button matChipRemove>
                                 <mat-icon>cancel</mat-icon>
                             </button>
                         </mat-chip-row>
                     </mat-chip-grid>
                     <mat-icon color="warn" matPrefix>block</mat-icon>
-                    <input [matChipInputFor]="authorsIncludesGridB" [matAutocomplete]="authorsAutoB"
-                        formControlName="exclude" />
-                    <mat-autocomplete #authorsAutoB="matAutocomplete"
-                        (optionSelected)="addIncludedAuthor($event.option.value)">
-                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
-                            {{author.displayName}}
+                    <input [matChipInputFor]="tagsExcludeGrid" [matAutocomplete]="tagsExcludedOptions"
+                        [formControl]="excludedTagsControl" />
+                    <mat-autocomplete #tagsExcludedOptions="matAutocomplete"
+                        (optionSelected)="addExcludedTag($event.option.value)">
+                        <mat-option *ngFor="let tag of (filteredExcludedTags | async)" [value]="tag">
+                            {{tag}}
                         </mat-option>
                     </mat-autocomplete>
                     <mat-hint>None of these tags.</mat-hint>

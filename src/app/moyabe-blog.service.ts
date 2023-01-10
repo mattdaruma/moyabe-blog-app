@@ -10,6 +10,7 @@ export class MoyabeBlogService {
   public Authors: Observable<Authors>
   public WebSettings = {} as Settings
   public Settings = new ReplaySubject<Settings>(1)
+  public Tags = new ReplaySubject<string[]>(1)
   public UpdateList = new Subject<boolean>()
   private _settingsCachePath = 'moyabe-blog-settings'
   public get LocalSettings(): Settings | null {
@@ -22,16 +23,28 @@ export class MoyabeBlogService {
     else localStorage.setItem(this._settingsCachePath, JSON.stringify(settings))
   }
   constructor(private http: HttpClient) { 
+    this.LocalSettings = null
     this.Settings.subscribe(newSettings => {
+      console.warn('NEW SETTINGS')
       this.LocalSettings = newSettings
     })
     this.Authors = this.http.get<Authors>('/assets/authors/index.json')
-    this.Posts = this.http.get<Posts>('/assets/posts/index.json')
+    this.Posts = this.http.get<Posts>('/assets/posts/index.json').pipe(map(posts => {
+      let tags = [] as string[]
+      for(let ind in posts){
+        for(let tag of posts[ind].tags){
+          if(!tags.includes(tag)) tags.push(tag)
+        }
+      }
+      tags.sort()
+      this.Tags.next(tags)
+      return posts
+    }))
     if(this.LocalSettings !== null) console.warn('USED LOCAL')
     if(this.LocalSettings !== null) this.Settings.next(this.LocalSettings)
     this.http.get<Settings>('/assets/settings.json').pipe(first()).subscribe(settings => {
       this.WebSettings = settings
-      if(this.LocalSettings === null) console.warn('USED WEB SETTINGS')
+      if(this.LocalSettings === null) console.warn('USED WEB')
       if(this.LocalSettings === null) this.Settings.next(settings)
     })
   }

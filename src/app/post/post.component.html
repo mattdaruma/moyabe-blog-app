@@ -1,6 +1,48 @@
-<h1 style="text-align: center;">{{postData?.title}}</h1>
-<p style="text-align: center;">{{postData?.description}}</p>
-<div style="display:flex; justify-content: space-around;">
-    <button *ngFor="let tag of postData?.tags" mat-button color="accent">{{tag}}</button>
+<div class="padded post-card-container">
+    <div *ngIf="(mybs.Settings | async) as settings else noSettings">
+        <mat-card *ngIf="postData && authors && settings.displayFields.length > 0" class="post-card">
+            <mat-card-header>
+                <div 
+                    *ngIf="settings.displayFields.includes('author')" mat-card-avatar 
+                    [style]="{background: 'url(\'assets/authors/'+postData.author+'/avatar.png\'', backgroundSize: 'cover'}"
+                    ></div>
+                <mat-card-subtitle *ngIf="settings.displayFields.includes('postId')">
+                    {{postData.postId}}
+                </mat-card-subtitle>
+                <mat-card-title 
+                *ngIf="settings.displayFields.includes('title')"
+                >
+                    {{postData.title}}
+                </mat-card-title>
+                <mat-card-subtitle *ngIf="settings.displayFields.includes('author')">
+                    By {{authors[postData.author].displayName}}
+                </mat-card-subtitle>
+                <mat-card-subtitle *ngIf="settings.displayFields.includes('addedDate')">
+                    {{postData.addedDate | date}}
+                </mat-card-subtitle>
+            </mat-card-header>
+            <img 
+                *ngIf="settings.displayFields.includes('cover')"
+                class="cover-image" 
+                mat-card-image 
+                src="assets/posts/{{postData.postId}}/{{postData.cover}}"
+                alt="Post Cover Photo">
+            <mat-card-content *ngIf="settings.displayFields.includes('description')">
+                {{postData.description}}
+            </mat-card-content>
+            <mat-card-actions *ngIf="settings.displayFields.includes('tags')">
+                <mat-chip-listbox>
+                    <mat-chip *ngFor="let tag of postData.tags">
+                      {{tag}}
+                    </mat-chip>
+                </mat-chip-listbox>
+            </mat-card-actions>
+            <mat-card-actions *ngIf="settings.displayFields.includes('link')">
+                <button mat-button color="primary"
+                [routerLink]="['']"><mat-icon>home</mat-icon>Home</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
 </div>
-<div markdown [data]="postContent ?? ''"></div>
+<div markdown class="side-pad" [data]="postContent ?? ''">Loading post content...</div>
+<ng-template #noSettings>Loading settings...</ng-template>

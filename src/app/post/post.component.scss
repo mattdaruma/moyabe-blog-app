@@ -1,0 +1,16 @@
+.center-text{
+    text-align: center;
+}
+.tag-cloud{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.cover-image{
+    max-width: 50em;
+    max-height: 30em;
+}
+.post-card-container{
+    display: flex;
+    justify-content: center;
+}

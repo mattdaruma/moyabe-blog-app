@@ -1,4 +1,4 @@
-<div *ngIf="(mybs.Settings | async) as settings" class="side-pad">
+<div *ngIf="(mybs.Settings | async) as settings; else noSettings" class="side-pad">
     <app-feed-settings></app-feed-settings>
     <div class="between-row reverse-flow">
         <span [hidden]="!settings" class="top-pad">
@@ -9,7 +9,7 @@
             </button>
         </span>
         <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
-            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0"></mat-paginator>
+            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0 && settings.displayFields.length > 0"></mat-paginator>
     </div>
     <app-feed-table [hidden]="settings.displayFeed !== 'list' || settings.displayFields.length === 0"
         [posts]="pagedPosts" [authors]="authors"></app-feed-table>
@@ -18,10 +18,13 @@
     <ng-template #noSettings>No fields selected.</ng-template>
     <div class="between-row">
         <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
-            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0; else noPosts"></mat-paginator>
+            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0 && settings.displayFields.length > 0 else noPosts"></mat-paginator>
     </div>
     <ng-template #noPosts>
-        <div class="padded">No posts found.</div>
+        <div class="padded" *ngIf="settings.displayFields.length > 0; else noFields">No posts found.</div>
+    </ng-template>
+    <ng-template #noFields>
+        <div class="padded">No fields selected.</div>
     </ng-template>
 </div>
 <mat-menu #toolbarSettings="matMenu" xPosition="before">

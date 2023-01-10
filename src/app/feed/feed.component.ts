@@ -9,7 +9,7 @@ import { Authors, MoyabeBlogService, Post, Settings } from '../moyabe-blog.servi
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent {
-  posts: Post[] = []
+  private posts: Post[] = []
   filteredPosts: Post[] = []
   pagedPosts: Post[] = []
   pageSize: number = 10
@@ -39,7 +39,6 @@ export class FeedComponent {
   updateDisplaySetting(settingName: string){
     let newSettings = JSON.parse(JSON.stringify(this.settings)) as any
     newSettings[settingName] = !newSettings[settingName]
-    console.warn('SETING UPDATE')
     this.mybs.Settings.next(newSettings)
   }
   applySettings(){
@@ -57,17 +56,57 @@ export class FeedComponent {
       if(settings.filterDescription !== null) filteredPosts = filteredPosts.filter(post =>  {
         return post.description.toLowerCase().includes(settings.filterDescription!)
       })
+      if(settings.filterAuthorsInclude.length > 0) filteredPosts = filteredPosts.filter(post => {
+        let hasAnyAuthor = false
+        for(let authorId of settings.filterAuthorsInclude){
+          if(post.author === authorId){
+            hasAnyAuthor = true
+            break
+          }
+        }
+        return hasAnyAuthor
+      })
+      if(settings.filterAuthorsExclude.length > 0) filteredPosts = filteredPosts.filter(post => {
+        let hasAnyAuthor = false
+        for(let authorId of settings.filterAuthorsExclude){
+          if(post.author === authorId){
+            hasAnyAuthor = true
+            break
+          }
+        }
+        return !hasAnyAuthor
+      })
+      if(settings.filterTagsInclude.length > 0) filteredPosts = filteredPosts.filter(post => {
+        let hasAnyTag = false
+        for(let tag of settings.filterTagsInclude){
+          if(post.tags.includes(tag)){
+            hasAnyTag = true
+            break
+          }
+        }
+        return hasAnyTag
+      })
+      if(settings.filterTagsExclude.length > 0) filteredPosts = filteredPosts.filter(post => {
+        let hasAnyTag = false
+        for(let tag of settings.filterTagsExclude){
+          if(post.tags.includes(tag)){
+            hasAnyTag = true
+            break
+          }
+        }
+        return !hasAnyTag
+      })
       for(let i = 0; i < settings.sortOrder.length; i++){
         let topic = settings.sortOrder[settings.sortOrder.length - 1 - i]
         switch(topic){
-          case 'Date': {
+          case 'date': {
             let direction = settings.sortDate
             if(direction !== 0) filteredPosts.sort((a,b)=>{
               return a.addedDate > b.addedDate ? direction : -direction
             })
             break
           }
-          case 'Title': {
+          case 'title': {
             let direction = settings.sortTitle
             if(direction !== 0) filteredPosts.sort((a,b)=>{
               if(a.title === b.title) return 0
@@ -75,7 +114,7 @@ export class FeedComponent {
             })
             break
           }
-          case 'Author': {
+          case 'author': {
             let direction = settings.sortAuthor
             if(direction !== 0) filteredPosts.sort((a,b)=>{
               if(this.authors[a.author].displayName === this.authors[b.author].displayName) return 0

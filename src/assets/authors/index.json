@@ -4,5 +4,11 @@
         "catchPhrase": "CATCHPHRASE",
         "addedDate": 1672630692544,
         "avatar": "metatron.png"
+    },
+    "d5dbbe26-b75d-4468-9dd4-dd2e5344c159": {
+        "displayName": "Omnitron",
+        "catchPhrase": "THROWPHRASE",
+        "addedDate": 1672630000000,
+        "avatar": "metatron.png"
     }
 }
