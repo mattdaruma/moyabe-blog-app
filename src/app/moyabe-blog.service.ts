@@ -23,7 +23,6 @@ export class MoyabeBlogService {
     else localStorage.setItem(this._settingsCachePath, JSON.stringify(settings))
   }
   constructor(private http: HttpClient) { 
-    this.LocalSettings = null
     this.Settings.subscribe(newSettings => {
       console.warn('NEW SETTINGS')
       this.LocalSettings = newSettings
