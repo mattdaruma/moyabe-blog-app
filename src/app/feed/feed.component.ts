@@ -12,11 +12,9 @@ import { Authors, MoyabeBlogService, Post, Settings } from '../moyabe-blog.servi
 export class FeedComponent implements AfterContentInit {
   scrollTimer: NodeJS.Timeout | null = null
   @HostListener('window:scroll', ['$event']) scrollEvent(event: any){
-    console.warn('SCROLL')
     if(this.scrollTimer) return
     this.scrollTimer = setTimeout(()=>{
       this.mybs.FeedScrollY = window.scrollY
-      console.warn("SET SCROLL", this.mybs.FeedScrollY)
       this.scrollTimer = null
     }, 500)
   }
