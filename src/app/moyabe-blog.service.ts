@@ -12,6 +12,7 @@ export class MoyabeBlogService {
   public Settings = new ReplaySubject<Settings>(1)
   public Tags = new ReplaySubject<string[]>(1)
   public UpdateList = new Subject<boolean>()
+  public FeedScrollY: number = 0
   private _settingsCachePath = 'moyabe-blog-settings'
   public get LocalSettings(): Settings | null {
     let settingsCache = localStorage.getItem(this._settingsCachePath)

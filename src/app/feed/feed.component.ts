@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, HostListener } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
+import { NavigationEnd, Router } from '@angular/router';
 import { expand, first } from 'rxjs';
 import { Authors, MoyabeBlogService, Post, Settings } from '../moyabe-blog.service';
 
@@ -8,7 +9,17 @@ import { Authors, MoyabeBlogService, Post, Settings } from '../moyabe-blog.servi
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent {
+export class FeedComponent implements AfterContentInit {
+  scrollTimer: NodeJS.Timeout | null = null
+  @HostListener('window:scroll', ['$event']) scrollEvent(event: any){
+    console.warn('SCROLL')
+    if(this.scrollTimer) return
+    this.scrollTimer = setTimeout(()=>{
+      this.mybs.FeedScrollY = window.scrollY
+      console.warn("SET SCROLL", this.mybs.FeedScrollY)
+      this.scrollTimer = null
+    }, 500)
+  }
   private posts: Post[] = []
   filteredPosts: Post[] = []
   pagedPosts: Post[] = []
@@ -34,6 +45,11 @@ export class FeedComponent {
     })
     this.mybs.Settings.subscribe(settings => {
       this.settings = settings
+    })
+  }
+  ngAfterContentInit(): void {
+    window.scroll({ 
+      top: this.mybs.FeedScrollY
     })
   }
   updateDisplaySetting(settingName: string){

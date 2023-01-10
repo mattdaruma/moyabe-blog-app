@@ -14,6 +14,9 @@ export class PostComponent {
   authors: Authors | null = null
   constructor(route: ActivatedRoute, public mybs: MoyabeBlogService) { 
     route.params.subscribe(params => {
+      window.scroll({ 
+        top: 0
+      })
       this.mybs.Posts.pipe(first()).subscribe(posts => {
         let postData = posts[params['postId']]
         if(postData) postData.postId = params['postId']
