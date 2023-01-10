@@ -20,9 +20,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button'
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 
 import { MarkdownModule } from 'ngx-markdown';
+import { MatMenuModule } from '@angular/material/menu'; 
 import { PostComponent } from './post/post.component';
 import { KeysPipe } from './keys.pipe';
 import { HttpClientModule } from '@angular/common/http';
@@ -46,12 +49,15 @@ import { FeedCardsComponent } from './feed/feed-cards/feed-cards.component';
   imports: [
     BrowserModule,
     MatToolbarModule,
+    MatMenuModule,
     MatChipsModule,
     MatButtonModule,
     MatDatepickerModule,
     MatAutocompleteModule,
     MatNativeDateModule,
+    MatSlideToggleModule,
     MatPaginatorModule,
+    MatCheckboxModule,
     MatTabsModule,
     MatSortModule,
     MatFormFieldModule,

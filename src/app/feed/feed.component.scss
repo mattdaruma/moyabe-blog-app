@@ -1,0 +1,14 @@
+
+.between-row{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: center;
+}
+.option-label{
+    padding-right: 1em;
+}
+.reverse-flow{
+    flex-flow: row-reverse;
+}

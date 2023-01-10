@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { expand, first } from 'rxjs';
-import { Authors, MoyabeBlogService, Post } from '../moyabe-blog.service';
+import { Authors, MoyabeBlogService, Post, Settings } from '../moyabe-blog.service';
 
 @Component({
   selector: 'app-feed',
@@ -15,6 +15,7 @@ export class FeedComponent {
   pageSize: number = 10
   pageIndex: number = 0
   authors: Authors = {}
+  settings: Settings | null = null
   constructor(public mybs: MoyabeBlogService) { 
     this.mybs.Authors.subscribe(authors => {
       this.authors = authors
@@ -31,6 +32,15 @@ export class FeedComponent {
     this.mybs.UpdateList.subscribe(update => {
       if(update) this.applySettings()
     })
+    this.mybs.Settings.subscribe(settings => {
+      this.settings = settings
+    })
+  }
+  updateDisplaySetting(settingName: string){
+    let newSettings = JSON.parse(JSON.stringify(this.settings)) as any
+    newSettings[settingName] = !newSettings[settingName]
+    console.warn('SETING UPDATE')
+    this.mybs.Settings.next(newSettings)
   }
   applySettings(){
     this.mybs.Settings.pipe(first()).subscribe(settings => {

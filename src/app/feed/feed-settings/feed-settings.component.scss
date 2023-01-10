@@ -13,6 +13,8 @@
     justify-content: flex-end;
     gap: 1em;
 }
-.top-pad{
-    padding-top:1em;
+.settings-form, .filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em
 }

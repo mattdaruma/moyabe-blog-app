@@ -75,10 +75,12 @@ type SettingsKeys = 'title' | 'description' | 'displayFeed'
 export interface Settings {
   title: string;
   description: string;
-  expandSettings: boolean;
-  expandFilters: boolean;
-  expandSort: boolean;
-  expandDisplay: boolean;
+  displayViewOptions: boolean;
+  displaySortOptions: boolean;
+  displayFilterOptions: boolean;
+  displayResetButtons: boolean;
+  displayAuthorOptions: boolean,
+  displayTagOptions: boolean,
   filterTitle: string | null;
   filterDescription: string | null;
   filterAfter: number | null;

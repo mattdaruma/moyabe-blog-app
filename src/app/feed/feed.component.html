@@ -1,24 +1,71 @@
-<div class="padded">
+<div *ngIf="(mybs.Settings | async) as settings" class="side-pad">
     <app-feed-settings></app-feed-settings>
-    <div *ngIf="(mybs.Settings | async) as settings">
-        <app-feed-table 
-            [hidden]="settings.displayFeed !== 'list' || settings.displayFields.length === 0" 
-            [posts]="pagedPosts"
-            [authors]="authors"
-            ></app-feed-table>
-        <app-feed-cards 
-            [hidden]="settings.displayFeed !== 'grid' || settings.displayFields.length === 0" 
-            [posts]="pagedPosts"
-            [authors]="authors"
-            ></app-feed-cards>
-        <mat-paginator 
-            *ngIf="settings.displayFields.length > 0; else noSettings"
-            [pageIndex]="pageIndex" 
-            [pageSize]="pageSize" 
-            [length]="filteredPosts.length"
-            (page)="pageChange($event)"
-        ></mat-paginator>
-        <ng-template #noSettings>No fields selected.</ng-template>
+    <div class="between-row reverse-flow">
+        <span [hidden]="!settings" class="top-pad">
+            <button color="primary" mat-raised-button [matMenuTriggerFor]="toolbarSettings"
+                aria-label="Example icon-button with a menu">
+                <span>Feed Options</span>
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+        </span>
+        <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
+            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0"></mat-paginator>
     </div>
-    <ng-template #noSettings>Loading settings...</ng-template>
+    <app-feed-table [hidden]="settings.displayFeed !== 'list' || settings.displayFields.length === 0"
+        [posts]="pagedPosts" [authors]="authors"></app-feed-table>
+    <app-feed-cards [hidden]="settings.displayFeed !== 'grid' || settings.displayFields.length === 0"
+        [posts]="pagedPosts" [authors]="authors"></app-feed-cards>
+    <ng-template #noSettings>No fields selected.</ng-template>
+    <div class="between-row">
+        <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
+            (page)="pageChange($event)" *ngIf="filteredPosts.length > 0; else noPosts"></mat-paginator>
+    </div>
+    <ng-template #noPosts>
+        <div class="padded">No posts found.</div>
+    </ng-template>
 </div>
+<mat-menu #toolbarSettings="matMenu" xPosition="before">
+    <span mat-menu-item (click)="$event.stopPropagation();updateDisplaySetting('displayViewOptions')">
+        <mat-icon>display_settings</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displayViewOptions">
+            View
+        </mat-slide-toggle>
+    </span>
+    <span (click)="$event.stopPropagation();updateDisplaySetting('displaySortOptions')" mat-menu-item>
+        <mat-icon>sort</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displaySortOptions">
+            Sort
+        </mat-slide-toggle>
+    </span>
+    <span (click)="$event.stopPropagation();updateDisplaySetting('displayFilterOptions')"
+        mat-menu-item>
+        <mat-icon>filter_alt</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displayFilterOptions">
+            Filters
+        </mat-slide-toggle>
+    </span>
+    <span (click)="$event.stopPropagation();updateDisplaySetting('displayAuthorOptions')"
+        mat-menu-item>
+        <mat-icon>person</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displayAuthorOptions">
+            Authors
+        </mat-slide-toggle>
+    </span>
+    <span (click)="$event.stopPropagation();updateDisplaySetting('displayTagOptions')"
+        mat-menu-item>
+        <mat-icon>tag</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displayTagOptions">
+            Tags
+        </mat-slide-toggle>
+    </span>
+    <span (click)="$event.stopPropagation();updateDisplaySetting('displayResetButtons')"
+        mat-menu-item>
+        <mat-icon>restart_alt</mat-icon>
+        <mat-slide-toggle [checked]="settings?.displayResetButtons">
+            Reset
+        </mat-slide-toggle>
+    </span>
+</mat-menu>
+<ng-template #noSettings>
+    <div class="padded">Loading settings...</div>
+</ng-template>

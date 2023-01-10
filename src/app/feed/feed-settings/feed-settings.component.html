@@ -1,236 +1,200 @@
-<div>
-    <mat-accordion [formGroup]="settingsForm">
-        <mat-expansion-panel [expanded]="_settings.expandSettings" (afterCollapse)="panelCollapsed('settings')"
-            (afterExpand)="panelExpanded('settings')">
-            <mat-expansion-panel-header>
-                <mat-panel-title><mat-icon color="primary">settings</mat-icon>Feed Settings</mat-panel-title>
-                <mat-panel-description>Configure, filter, and sort the blog feed.</mat-panel-description>
-            </mat-expansion-panel-header>
-            <mat-accordion multi>
-                <mat-expansion-panel formGroupName="display" [expanded]="_settings.expandDisplay"
-                    (afterCollapse)="panelCollapsed('display')" (afterExpand)="panelExpanded('display')">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title><mat-icon color="primary">display_settings</mat-icon>Display</mat-panel-title>
-                        <mat-panel-description>Change the way the feed is displayed.</mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="settings-row">
-                        <span>
-                            <mat-label>Feed View </mat-label>
-                            <mat-button-toggle-group color="primary" #feedview="matButtonToggleGroup"
-                                formControlName="feed">
-                                <mat-button-toggle color="primary"
-                                    value="grid"><mat-icon>grid_view</mat-icon></mat-button-toggle>
-                                <mat-button-toggle value="list"><mat-icon>view_list</mat-icon></mat-button-toggle>
-                            </mat-button-toggle-group>
-                        </span>
-                        <span>
-                            <mat-label>Fields Displayed </mat-label>
-                            <mat-button-toggle-group color="primary" multiple formControlName="fields">
-                                <mat-button-toggle value="postId">ID</mat-button-toggle>
-                                <mat-button-toggle value="title">Title</mat-button-toggle>
-                                <mat-button-toggle value="cover">Cover</mat-button-toggle>
-                                <mat-button-toggle value="addedDate">Date</mat-button-toggle>
-                                <mat-button-toggle value="description">Description</mat-button-toggle>
-                                <mat-button-toggle value="author">Author</mat-button-toggle>
-                                <mat-button-toggle value="tags">Tags</mat-button-toggle>
-                                <mat-button-toggle value="link">Link</mat-button-toggle>
-                            </mat-button-toggle-group>
-                        </span>
-                    </div>
-                </mat-expansion-panel>
-                <mat-expansion-panel [expanded]="_settings.expandSort" (afterCollapse)="panelCollapsed('sort')"
-                    (afterExpand)="panelExpanded('sort')" formGroupName="sort">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title><mat-icon color="primary">sort</mat-icon>Sort</mat-panel-title>
-                        <mat-panel-description>Change the feed order.</mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="settings-row">
-                        <span>
-                            <mat-label>Date Sort </mat-label>
-                            <mat-button-toggle-group color="primary" formControlName="date">
-                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
-                            </mat-button-toggle-group>
-                        </span>
-                        <span>
-                            <mat-label>Title Sort </mat-label>
-                            <mat-button-toggle-group color="primary" formControlName="title">
-                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
-                            </mat-button-toggle-group>
-                        </span>
-                        <span>
-                            <mat-label>Author Sort </mat-label>
-                            <mat-button-toggle-group color="primary" formControlName="author">
-                                <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
-                                <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
-                            </mat-button-toggle-group>
-                        </span>
-                    </div>
-                </mat-expansion-panel>
-
-                <mat-expansion-panel [expanded]="_settings.expandFilters" (afterCollapse)="panelCollapsed('filters')"
-                    (afterExpand)="panelExpanded('filters')" formGroupName="filters">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title><mat-icon color="primary">filter_alt</mat-icon>Filter</mat-panel-title>
-                        <mat-panel-description>Search for specific posts.</mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div>
-                        <div class="settings-row equal-flex">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Title</mat-label>
-                                <input matInput placeholder="Title" formControlName="title">
-                                <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
-                                <mat-hint>Title contains this text.</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Description</mat-label>
-                                <input matInput placeholder="Description" formControlName="description">
-                                <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
-                                <mat-hint>Description contains this text.</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>After</mat-label>
-                                <input matInput [matDatepicker]="afterDate" formControlName="after">
-                                <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
-                                <mat-hint>Posted after this date.</mat-hint>
-                                <mat-datepicker-toggle matIconSuffix [for]="afterDate"></mat-datepicker-toggle>
-                                <mat-datepicker #afterDate>
-                                    <mat-datepicker-actions>
-                                        <button mat-button matDatepickerCancel>Cancel</button>
-                                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-                                    </mat-datepicker-actions>
-                                </mat-datepicker>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Before</mat-label>
-                                <input matInput [matDatepicker]="beforeDate" formControlName="before">
-                                <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
-                                <mat-hint>Posted before this date.</mat-hint>
-                                <mat-datepicker-toggle matIconSuffix [for]="beforeDate"></mat-datepicker-toggle>
-                                <mat-datepicker #beforeDate>
-                                    <mat-datepicker-actions>
-                                        <button mat-button matDatepickerCancel>Cancel</button>
-                                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-                                    </mat-datepicker-actions>
-                                </mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="settings-row top-pad equal-flex" formGroupName="authors">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Authors Included</mat-label>
-                                <mat-chip-grid #authorsIncludesGrid>
-                                    <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
-                                        (removed)="removeIncludedAuthor(author)">
-                                        {{author.displayName}}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
-                                </mat-chip-grid>
-                                <mat-icon color="primary" matPrefix>add_task</mat-icon>
-                                <input [matChipInputFor]="authorsIncludesGrid" [matAutocomplete]="authorsAuto"
-                                    formControlName="include" />
-                                <mat-autocomplete #authorsAuto="matAutocomplete"
-                                    (optionSelected)="addIncludedAuthor($event.option.value)">
-                                    <mat-option *ngFor="let author of (filteredIncludedAuthors | async)"
-                                        [value]="author">
-                                        {{author.displayName}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-hint>Any of these authors.</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Authors Excluded</mat-label>
-                                <mat-chip-grid #authorsIncludesGridZ>
-                                    <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
-                                        (removed)="removeIncludedAuthor(author)">
-                                        {{author.displayName}}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
-                                </mat-chip-grid>
-                                <mat-icon color="warn" matPrefix>block</mat-icon>
-                                <input [matChipInputFor]="authorsIncludesGridZ" [matAutocomplete]="authorsAutoZ"
-                                formControlName="exclude" />
-                                <mat-autocomplete #authorsAutoZ="matAutocomplete"
-                                    (optionSelected)="addIncludedAuthor($event.option.value)">
-                                    <mat-option *ngFor="let author of (filteredIncludedAuthors | async)"
-                                        [value]="author">
-                                        {{author.displayName}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-hint>None of these authors.</mat-hint>
-                            </mat-form-field>
-                        </div>
-                        <div class="settings-row top-pad equal-flex" formGroupName="tags">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Tags Included</mat-label>
-                                <mat-chip-grid #authorsIncludesGridA>
-                                    <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
-                                        (removed)="removeIncludedAuthor(author)">
-                                        {{author.displayName}}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
-                                </mat-chip-grid>
-                                <mat-icon color="primary" matPrefix>add_task</mat-icon>
-                                <input [matChipInputFor]="authorsIncludesGridA" [matAutocomplete]="authorsAutoA"
-                                    formControlName="include" />
-                                <mat-button-toggle-group matSuffix color="primary">
-                                    <mat-button-toggle [value]="1"><mat-icon>check</mat-icon></mat-button-toggle>
-                                    <mat-button-toggle [value]="-1"><mat-icon>checklist</mat-icon></mat-button-toggle>
-                                </mat-button-toggle-group>
-                                <mat-autocomplete #authorsAutoA="matAutocomplete"
-                                    (optionSelected)="addIncludedAuthor($event.option.value)">
-                                    <mat-option *ngFor="let author of (filteredIncludedAuthors | async)"
-                                        [value]="author">
-                                        {{author.displayName}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-hint>All of these tags.</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Tags Excluded</mat-label>
-                                <mat-chip-grid #authorsIncludesGridB>
-                                    <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
-                                        (removed)="removeIncludedAuthor(author)">
-                                        {{author.displayName}}
-                                        <button matChipRemove>
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                    </mat-chip-row>
-                                </mat-chip-grid>
-                                <mat-icon color="warn" matPrefix>block</mat-icon>
-                                <input [matChipInputFor]="authorsIncludesGridB" [matAutocomplete]="authorsAutoB"
-                                formControlName="exclude" />
-                                <mat-autocomplete #authorsAutoB="matAutocomplete"
-                                    (optionSelected)="addIncludedAuthor($event.option.value)">
-                                    <mat-option *ngFor="let author of (filteredIncludedAuthors | async)"
-                                        [value]="author">
-                                        {{author.displayName}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-hint>None of these tags.</mat-hint>
-                            </mat-form-field>
-                        </div>
-                        <div class="right-align padded-top">
-                            <button mat-raised-button color="warn"
-                                (click)="clearFilters()"><mat-icon>clear</mat-icon>Clear Filters</button>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div class="right-align top-pad">
-                <button (click)="restoreDefaults()" mat-raised-button color="accent">
-                    <mat-icon>settings_backup_restore</mat-icon>
-                    Restore Defaults</button>
+<div [hidden]="
+    !settings?.displayViewOptions && 
+    !settings?.displaySortOptions &&
+    !settings?.displayFilterOptions && 
+    !settings?.displayAuthorOptions && 
+    !settings?.displayTagOptions && 
+    !settings?.displayResetButtons
+    ">
+    <div [formGroup]="settingsForm" class="settings-form top-pad" >
+        <div formGroupName="display" class="settings-row" *ngIf="settings?.displayViewOptions === true">
+            <span>
+                <mat-label>Feed View </mat-label>
+                <mat-button-toggle-group color="primary" #feedview="matButtonToggleGroup" formControlName="feed">
+                    <mat-button-toggle color="primary" value="grid"><mat-icon>grid_view</mat-icon></mat-button-toggle>
+                    <mat-button-toggle value="list"><mat-icon>view_list</mat-icon></mat-button-toggle>
+                </mat-button-toggle-group>
+            </span>
+            <span>
+                <mat-label>Fields Displayed </mat-label>
+                <mat-button-toggle-group color="primary" multiple formControlName="fields">
+                    <mat-button-toggle value="postId">ID</mat-button-toggle>
+                    <mat-button-toggle value="title">Title</mat-button-toggle>
+                    <mat-button-toggle value="cover">Cover</mat-button-toggle>
+                    <mat-button-toggle value="addedDate">Date</mat-button-toggle>
+                    <mat-button-toggle value="description">Description</mat-button-toggle>
+                    <mat-button-toggle value="author">Author</mat-button-toggle>
+                    <mat-button-toggle value="tags">Tags</mat-button-toggle>
+                    <mat-button-toggle value="link">Link</mat-button-toggle>
+                </mat-button-toggle-group>
+            </span>
+        </div>
+        <div class="settings-row" formGroupName="sort" *ngIf="settings?.displaySortOptions === true">
+            <span>
+                <mat-label>Date Sort </mat-label>
+                <mat-button-toggle-group color="primary" formControlName="date">
+                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                </mat-button-toggle-group>
+            </span>
+            <span>
+                <mat-label>Title Sort </mat-label>
+                <mat-button-toggle-group color="primary" formControlName="title">
+                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                </mat-button-toggle-group>
+            </span>
+            <span>
+                <mat-label>Author Sort </mat-label>
+                <mat-button-toggle-group color="primary" formControlName="author">
+                    <mat-button-toggle [value]="1"><mat-icon>arrow_upward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="-1"><mat-icon>arrow_downward</mat-icon></mat-button-toggle>
+                    <mat-button-toggle [value]="0"><mat-icon>block</mat-icon></mat-button-toggle>
+                </mat-button-toggle-group>
+            </span>
+        </div>
+        <div formGroupName="filters" class="filters-form" >
+            <div class="settings-row equal-flex" *ngIf="settings?.displayFilterOptions === true">
+                <mat-form-field appearance="outline">
+                    <mat-label>Title</mat-label>
+                    <input matInput placeholder="Title" formControlName="title">
+                    <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
+                    <mat-hint>Title contains this text.</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <input matInput placeholder="Description" formControlName="description">
+                    <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
+                    <mat-hint>Description contains this text.</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>After</mat-label>
+                    <input matInput [matDatepicker]="afterDate" formControlName="after">
+                    <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
+                    <mat-hint>Posted after this date.</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="afterDate"></mat-datepicker-toggle>
+                    <mat-datepicker #afterDate>
+                        <mat-datepicker-actions>
+                            <button mat-button matDatepickerCancel>Cancel</button>
+                            <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Before</mat-label>
+                    <input matInput [matDatepicker]="beforeDate" formControlName="before">
+                    <button mat-icon-button matSuffix color="warn"><mat-icon>clear</mat-icon></button>
+                    <mat-hint>Posted before this date.</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="beforeDate"></mat-datepicker-toggle>
+                    <mat-datepicker #beforeDate>
+                        <mat-datepicker-actions>
+                            <button mat-button matDatepickerCancel>Cancel</button>
+                            <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
             </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+            <div class="settings-row equal-flex" formGroupName="authors" *ngIf="settings?.displayAuthorOptions === true">
+                <mat-form-field appearance="outline">
+                    <mat-label>Authors Included</mat-label>
+                    <mat-chip-grid #authorsIncludesGrid>
+                        <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
+                            (removed)="removeIncludedAuthor(author)">
+                            {{author.displayName}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    </mat-chip-grid>
+                    <mat-icon color="primary" matPrefix>add_task</mat-icon>
+                    <input [matChipInputFor]="authorsIncludesGrid" [matAutocomplete]="authorsAuto"
+                        formControlName="include" />
+                    <mat-autocomplete #authorsAuto="matAutocomplete"
+                        (optionSelected)="addIncludedAuthor($event.option.value)">
+                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
+                            {{author.displayName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-hint>Any of these authors.</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Authors Excluded</mat-label>
+                    <mat-chip-grid #authorsIncludesGridZ>
+                        <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
+                            (removed)="removeIncludedAuthor(author)">
+                            {{author.displayName}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    </mat-chip-grid>
+                    <mat-icon color="warn" matPrefix>block</mat-icon>
+                    <input [matChipInputFor]="authorsIncludesGridZ" [matAutocomplete]="authorsAutoZ"
+                        formControlName="exclude" />
+                    <mat-autocomplete #authorsAutoZ="matAutocomplete"
+                        (optionSelected)="addIncludedAuthor($event.option.value)">
+                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
+                            {{author.displayName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-hint>None of these authors.</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="settings-row equal-flex" formGroupName="tags" *ngIf="settings?.displayTagOptions === true">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tags Included</mat-label>
+                    <mat-chip-grid #authorsIncludesGridA>
+                        <mat-chip-row color="warn" *ngFor="let author of includedAuthors; let i = index"
+                            (removed)="removeIncludedAuthor(author)">
+                            {{author.displayName}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    </mat-chip-grid>
+                    <mat-icon color="primary" matPrefix>add_task</mat-icon>
+                    <input [matChipInputFor]="authorsIncludesGridA" [matAutocomplete]="authorsAutoA"
+                        formControlName="include" />
+                    <mat-autocomplete #authorsAutoA="matAutocomplete"
+                        (optionSelected)="addIncludedAuthor($event.option.value)">
+                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
+                            {{author.displayName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-hint>All of these tags.</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Tags Excluded</mat-label>
+                    <mat-chip-grid #authorsIncludesGridB>
+                        <mat-chip-row *ngFor="let author of includedAuthors; let i = index"
+                            (removed)="removeIncludedAuthor(author)">
+                            {{author.displayName}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    </mat-chip-grid>
+                    <mat-icon color="warn" matPrefix>block</mat-icon>
+                    <input [matChipInputFor]="authorsIncludesGridB" [matAutocomplete]="authorsAutoB"
+                        formControlName="exclude" />
+                    <mat-autocomplete #authorsAutoB="matAutocomplete"
+                        (optionSelected)="addIncludedAuthor($event.option.value)">
+                        <mat-option *ngFor="let author of (filteredIncludedAuthors | async)" [value]="author">
+                            {{author.displayName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-hint>None of these tags.</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="settings-row" *ngIf="settings?.displayResetButtons === true">
+            <button mat-raised-button color="warn" (click)="clearFilters()"><mat-icon>clear</mat-icon>Clear
+                Filters</button>
+            <button (click)="restoreDefaults()" mat-raised-button color="accent">
+                <mat-icon>settings_backup_restore</mat-icon>
+                Restore Defaults</button>
+        </div>
+    </div>
 </div>
