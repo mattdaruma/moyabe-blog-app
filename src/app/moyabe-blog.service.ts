@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { first, map, Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, first, forkJoin, map, Observable, of, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoyabeBlogService {
-  public Posts: Observable<Posts>
-  public Authors: Observable<Authors>
-  public WebSettings = {} as Settings
+  public Posts = new ReplaySubject<Posts>(1)
+  public Authors = new ReplaySubject<Authors>(1)
   public Settings = new ReplaySubject<Settings>(1)
+  public WebSettings: Settings | null = null
   public Tags = new ReplaySubject<string[]>(1)
   public UpdateList = new Subject<boolean>()
   public FeedScrollY: number = 0
@@ -25,27 +25,28 @@ export class MoyabeBlogService {
   }
   constructor(private http: HttpClient) { 
     this.Settings.subscribe(newSettings => {
-      console.warn('NEW SETTINGS')
       this.LocalSettings = newSettings
     })
-    this.Authors = this.http.get<Authors>('/assets/authors/index.json')
-    this.Posts = this.http.get<Posts>('/assets/posts/index.json').pipe(map(posts => {
-      let tags = [] as string[]
-      for(let ind in posts){
-        for(let tag of posts[ind].tags){
-          if(!tags.includes(tag)) tags.push(tag)
-        }
-      }
-      tags.sort()
-      this.Tags.next(tags)
-      return posts
-    }))
-    if(this.LocalSettings !== null) console.warn('USED LOCAL')
     if(this.LocalSettings !== null) this.Settings.next(this.LocalSettings)
-    this.http.get<Settings>('/assets/settings.json').pipe(first()).subscribe(settings => {
-      this.WebSettings = settings
-      if(this.LocalSettings === null) console.warn('USED WEB')
-      if(this.LocalSettings === null) this.Settings.next(settings)
+    forkJoin({
+      authors: this.http.get<Authors>('/assets/authors/index.json'),
+      posts: this.http.get<Posts>('/assets/posts/index.json').pipe(map(posts => {
+        let tags = [] as string[]
+        for(let ind in posts){
+          for(let tag of posts[ind].tags){
+            if(!tags.includes(tag)) tags.push(tag)
+          }
+        }
+        tags.sort()
+        this.Tags.next(tags)
+        return posts
+      })),
+      settings: this.http.get<Settings>('/assets/settings.json')
+    }).subscribe(blogData => {
+      this.WebSettings = JSON.parse(JSON.stringify(blogData.settings))
+      if(this.LocalSettings === null) this.Settings.next(blogData.settings)
+      this.Authors.next(blogData.authors)
+      this.Posts.next(blogData.posts)
     })
   }
   getPost(postId: string){
@@ -88,8 +89,6 @@ type SettingsKeys = 'title' | 'description' | 'displayFeed'
 export interface Settings {
   title: string;
   description: string;
-  displayViewOptions: boolean;
-  displaySortOptions: boolean;
   displayFilterOptions: boolean;
   displayResetButtons: boolean;
   displayAuthorOptions: boolean,

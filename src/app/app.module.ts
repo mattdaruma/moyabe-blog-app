@@ -35,6 +35,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FeedSettingsComponent } from './feed/feed-settings/feed-settings.component';
 import { FeedTableComponent } from './feed/feed-table/feed-table.component';
 import { FeedCardsComponent } from './feed/feed-cards/feed-cards.component';
+import { MatBadgeModule } from '@angular/material/badge'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { FeedCardsComponent } from './feed/feed-cards/feed-cards.component';
   imports: [
     BrowserModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
+    MatBadgeModule,
     MatMenuModule,
     MatChipsModule,
     MatButtonModule,

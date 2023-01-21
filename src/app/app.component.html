@@ -1,7 +1,16 @@
-<mat-toolbar color="primary">
-    <span class="center-flex">
-        <button color="accent" mat-icon-button [routerLink]="['/']"><mat-icon>home</mat-icon></button>
-        <span>{{(mybs.Settings | async)?.title}}</span>
-    </span>
-</mat-toolbar>
-<router-outlet></router-outlet>
+
+<div [@fade]="contentFade">
+    <mat-toolbar color="primary">
+        <span class="center-flex">
+            <button color="accent" mat-icon-button [routerLink]="['/']"><mat-icon>home</mat-icon></button>
+            <span>{{(mybs.Settings | async)?.title}}</span>
+        </span>
+    </mat-toolbar>
+    <div class="outlet-container">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+<div class="loading-message" [@fade]="loaderFade">
+    <mat-spinner></mat-spinner> 
+    <h1>Loading Blog Data...</h1>
+</div>

@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deployApp": "aws s3 sync ./dist/moyabe-blog-app s3://moyabe-blog && aws cloudfront create-invalidation --distribution-id=E23S0QOK4ORGDR --paths /*",
+    "deployAssets": "aws s3 sync ./src/assets s3://moyabe-blog/assets && aws cloudfront create-invalidation --distribution-id=E23S0QOK4ORGDR --paths /*",
+    "pushAssets": "aws s3 sync ./src/assets s3://moyabe-blog/assets",
+    "refreshCloudfront": "aws cloudfront create-invalidation --distribution-id=E23S0QOK4ORGDR --paths /*"
   },
   "private": true,
   "dependencies": {

@@ -1,14 +1,8 @@
 {
-    "d5dbbe26-b75d-4468-9dd4-dd2e5344c158": {
-        "displayName": "Metatron",
-        "catchPhrase": "CATCHPHRASE",
-        "addedDate": 1672630692544,
-        "avatar": "metatron.png"
-    },
     "d5dbbe26-b75d-4468-9dd4-dd2e5344c159": {
-        "displayName": "Omnitron",
-        "catchPhrase": "THROWPHRASE",
+        "displayName": "Mr Mo",
+        "catchPhrase": "Putting the Mo in MoYaBe.",
         "addedDate": 1672630000000,
-        "avatar": "metatron.png"
+        "avatar": "peace-banana.png"
     }
 }

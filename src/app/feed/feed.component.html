@@ -1,20 +1,20 @@
-<div *ngIf="(mybs.Settings | async) as settings; else noSettings" class="side-pad">
+<div class="side-pad" [@fade]="fadePage">
     <app-feed-settings></app-feed-settings>
     <div class="between-row reverse-flow">
         <span [hidden]="!settings" class="top-pad">
-            <button color="primary" mat-raised-button [matMenuTriggerFor]="toolbarSettings"
-                aria-label="Example icon-button with a menu">
-                <span>Feed Options</span>
-                <mat-icon>arrow_drop_down</mat-icon>
+            <button color="primary" mat-icon-button [matMenuTriggerFor]="toolbarSettings">
+                <mat-icon>settings</mat-icon>
             </button>
         </span>
         <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
             (page)="pageChange($event)" *ngIf="filteredPosts.length > 0 && settings.displayFields.length > 0"></mat-paginator>
     </div>
-    <app-feed-table [hidden]="settings.displayFeed !== 'list' || settings.displayFields.length === 0"
-        [posts]="pagedPosts" [authors]="authors"></app-feed-table>
-    <app-feed-cards [hidden]="settings.displayFeed !== 'grid' || settings.displayFields.length === 0"
-        [posts]="pagedPosts" [authors]="authors"></app-feed-cards>
+    <div class="post-feed" [@fade]="fadeList">
+        <app-feed-table  
+            [posts]="pagedPosts" [authors]="authors" [hidden]="settings.displayFeed !== 'list' ? true : false"></app-feed-table>
+        <app-feed-cards  
+            [posts]="pagedPosts" [authors]="authors" [hidden]="settings.displayFeed !== 'grid' ? true : false"></app-feed-cards>
+    </div>
     <ng-template #noSettings>No fields selected.</ng-template>
     <div class="between-row">
         <mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="filteredPosts.length"
@@ -27,48 +27,125 @@
         <div class="padded">No fields selected.</div>
     </ng-template>
 </div>
+
 <mat-menu #toolbarSettings="matMenu" xPosition="before">
-    <span mat-menu-item (click)="$event.stopPropagation();updateDisplaySetting('displayViewOptions')">
-        <mat-icon>display_settings</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displayViewOptions">
-            View
-        </mat-slide-toggle>
+    <span mat-menu-item (click)="$event.stopPropagation();updateViewSetting()">
+        <span style="display:flex;align-content:center; justify-content: space-between;">
+            <mat-icon color="primary" #gridIcon>grid_view</mat-icon>
+            <mat-slide-toggle [checked]="settings.displayFeed === 'list'"></mat-slide-toggle>
+            <mat-icon class="no-margin" color="primary">view_list</mat-icon>
+        </span>
     </span>
-    <span (click)="$event.stopPropagation();updateDisplaySetting('displaySortOptions')" mat-menu-item>
-        <mat-icon>sort</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displaySortOptions">
-            Sort
-        </mat-slide-toggle>
+    <span mat-menu-item [matMenuTriggerFor]="sortMenu">
+        <mat-icon class="overflow-unset" color="primary">sort_by_alpha</mat-icon> Sort
+    </span>
+    <span mat-menu-item [matMenuTriggerFor]="viewMenu">
+        <mat-icon class="overflow-unset"  color="primary">checklist</mat-icon> Fields
     </span>
     <span (click)="$event.stopPropagation();updateDisplaySetting('displayFilterOptions')"
         mat-menu-item>
-        <mat-icon>filter_alt</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displayFilterOptions">
+        <mat-icon class="overflow-unset" >filter_alt</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFilterOptions">
             Filters
         </mat-slide-toggle>
     </span>
     <span (click)="$event.stopPropagation();updateDisplaySetting('displayAuthorOptions')"
         mat-menu-item>
-        <mat-icon>person</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displayAuthorOptions">
+        <mat-icon class="overflow-unset" >person</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayAuthorOptions">
             Authors
         </mat-slide-toggle>
     </span>
     <span (click)="$event.stopPropagation();updateDisplaySetting('displayTagOptions')"
         mat-menu-item>
-        <mat-icon>tag</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displayTagOptions">
+        <mat-icon class="overflow-unset" >tag</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayTagOptions">
             Tags
         </mat-slide-toggle>
     </span>
     <span (click)="$event.stopPropagation();updateDisplaySetting('displayResetButtons')"
         mat-menu-item>
-        <mat-icon>restart_alt</mat-icon>
-        <mat-slide-toggle [checked]="settings?.displayResetButtons">
+        <mat-icon class="overflow-unset" >restart_alt</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayResetButtons">
             Reset
         </mat-slide-toggle>
     </span>
+    <span (click)="$event.stopPropagation();restoreDefaults()"
+    mat-menu-item>
+        <mat-icon color="primary">settings_backup_restore</mat-icon>
+        <span>Restore Defaults</span>
+    </span>
 </mat-menu>
+<mat-menu #viewMenu="matMenu">
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('postId')">
+        <mat-icon color="primary">fingerprint</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('postId')">
+            ID
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('cover')">
+        <mat-icon color="primary">image</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('cover')">
+            Cover
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('title')">
+        <mat-icon color="primary">title</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('title')">
+            Title
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('description')">
+        <mat-icon color="primary">notes</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('description')">
+            Desc
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('addedDate')">
+        <mat-icon color="primary">calendar_month</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('addedDate')">
+            Date
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('author')">
+        <mat-icon color="primary">person</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('author')">
+            Author
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('tags')">
+        <mat-icon color="primary">sell</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('tags')">
+            Tags
+        </mat-slide-toggle>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateFieldSetting('link')">
+        <mat-icon color="primary">link</mat-icon>
+        <mat-slide-toggle [checked]="settings.displayFields!.includes('link')">
+            Link
+        </mat-slide-toggle>
+    </span> 
+</mat-menu>
+<mat-menu #sortMenu="matMenu">
+    <span mat-menu-item (click)="$event.stopPropagation();updateSort('Date')" >
+        <mat-icon *ngIf="settings.sortDate! === 0" color="primary">calendar_month</mat-icon>
+        <mat-icon *ngIf="settings.sortDate! > 0" color="primary">arrow_upward</mat-icon>
+        <mat-icon *ngIf="settings.sortDate! < 0" color="primary">arrow_downward</mat-icon>
+        <span matBadgeColor="accent" [matBadge]="settings.sortOrder!.indexOf('date') + 1" matBadgePosition="before" style="padding-left: 1em">Date</span>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateSort('Title')">
+        <mat-icon *ngIf="settings.sortTitle! === 0" color="primary">title</mat-icon>
+        <mat-icon *ngIf="settings.sortTitle! > 0" color="primary">arrow_upward</mat-icon>
+        <mat-icon *ngIf="settings.sortTitle! < 0" color="primary">arrow_downward</mat-icon>
+        <span matBadgeColor="accent" [matBadge]="settings.sortOrder!.indexOf('title') + 1" matBadgePosition="before" style="padding-left: 1em">Title</span>
+    </span> 
+    <span mat-menu-item (click)="$event.stopPropagation();updateSort('Author')">
+        <mat-icon *ngIf="settings.sortAuthor! === 0" color="primary">person</mat-icon>
+        <mat-icon *ngIf="settings.sortAuthor! > 0" color="primary">arrow_upward</mat-icon>
+        <mat-icon *ngIf="settings.sortAuthor! < 0" color="primary">arrow_downward</mat-icon>
+        <span matBadgeColor="accent" [matBadge]="settings.sortOrder!.indexOf('author') + 1" matBadgePosition="before" style="padding-left: 1em">Author</span>
+    </span> 
+    </mat-menu>
 <ng-template #noSettings>
     <div class="padded">Loading settings...</div>
 </ng-template>

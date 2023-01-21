@@ -12,3 +12,10 @@
 .reverse-flow{
     flex-flow: row-reverse;
 }
+.centered-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+.mdc-list-item__primary-text {
+    width: 100% !important;
+}

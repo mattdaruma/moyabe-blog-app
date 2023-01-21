@@ -16,16 +16,7 @@ export class FeedSettingsComponent {
       description: new FormControl(''),
       before: new FormControl<Date | null>(null),
       after: new FormControl<Date | null>(null)
-    }),
-    display: new FormGroup({
-      feed: new FormControl(''),
-      fields: new FormControl<string[]>([])
     })
-  })
-  sort = new FormGroup({
-    date: new FormControl<number>(0),
-    title: new FormControl<number>(0),
-    author: new FormControl<number>(0)
   })
   tags: string[] = []
   authors: Authors | null = null
@@ -103,30 +94,9 @@ export class FeedSettingsComponent {
         this.settings!.filterAfter = newSettings.filters!.after?.getTime() ?? null
         this.settings!.filterTitle = newSettings.filters!.title ?? null
         this.settings!.filterDescription = newSettings.filters!.description ?? null
-        this.settings!.displayFeed = newSettings.display!.feed ?? 'list'
-        this.settings!.displayFields = newSettings.display!.fields ?? ['title']
         this.mybs.Settings.next(this.settings!)
         this.mybs.UpdateList.next(true)
       })
-  }
-  selectSort(newFirst:string, direction: number){
-    if(this.settings?.sortOrder.includes(newFirst)){
-      this.settings!.sortOrder.splice(this.settings!.sortOrder.indexOf(newFirst), 1)
-      this.settings?.sortOrder.unshift(newFirst)
-    }
-    switch(newFirst){
-      case('date'): 
-        this.settings!.sortDate = direction
-        break
-      case('title'): 
-        this.settings!.sortTitle = direction
-        break
-      case('author'): 
-        this.settings!.sortAuthor = direction
-        break
-    }
-    this.mybs.Settings.next(this.settings!)
-    this.mybs.UpdateList.next(true)
   }
   setForm(settings: Settings) {
     if(this.settings) this.settings!.filterAuthorsInclude = settings.filterAuthorsInclude
@@ -139,18 +109,11 @@ export class FeedSettingsComponent {
         description: settings.filterDescription,
         before: settings.filterBefore ? new Date(settings.filterBefore) : null,
         after: settings.filterAfter ? new Date(settings.filterAfter) : null,
-      },
-      display: {
-        fields: settings.displayFields,
-        feed: settings.displayFeed
       }
     })
   }
   restoreDefaults() {
-    this.setForm(this.mybs.WebSettings)
-    this.settings!.sortAuthor = this.mybs.WebSettings.sortAuthor
-    this.settings!.sortDate = this.mybs.WebSettings.sortDate
-    this.settings!.sortTitle = this.mybs.WebSettings.sortTitle
+    this.setForm(this.mybs.WebSettings!)
   }
   addIncludedAuthor(author: Author) {
     if (this.settings!.filterAuthorsInclude.some(included => included === author.authorId)) return

@@ -11,7 +11,7 @@
         <th mat-header-cell *matHeaderCellDef> Author
         <td mat-cell *matCellDef="let row">  
             <span class="center-flex">
-                <img [src]="'assets/authors/'+row.author+'/avatar.png'" [style.width]="'2em'">
+                <img [src]="'assets/authors/'+row.author+'/' + authors[row.author].avatar" [style.width]="'2em'">
                 {{authors[row.author].displayName}} 
             </span>
         </td>

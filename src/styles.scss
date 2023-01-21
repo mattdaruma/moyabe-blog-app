@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; padding-bottom: 100vh;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; padding-bottom: 10em;}
 .padded { padding: 1em; }
 .center-text { text-align: center;}
 .pointer { cursor: pointer;}
@@ -9,3 +9,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; padding-bot
 .top-pad{ padding-top:1em;}
 .bottom-pad{ padding-bottom:1em;}
 .side-pad{ padding-left: 1em; padding-right: 1em;}
+.mdc-list-item__primary-text{width: 100% !important;}
+.no-margin{margin: 0 !important;}
+.mat-mdc-menu-item mat-icon{ overflow: unset !important;}
+
+.loading-message{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.loading-backdrop{
+    position:fixed;
+    top: 64px;
+    left: 0;
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10;
+    background: #FFF;
+    pointer-events: none;
+}
+mat-toolbar{
+    position: fixed;
+    z-index: 10;
+}
+.outlet-container{
+    padding-top: 64px;
+}
